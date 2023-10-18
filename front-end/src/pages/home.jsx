@@ -12,20 +12,71 @@ export default function Home(){
 
     const [randomPoem,setRandomPoem] = useState({Meaning: undefined, lyrics: undefined,metaphorical_terms: undefined, mood:undefined, poem: undefined, poet: undefined, source_domain: undefined , target_domain: undefined, year: undefined});
     const [refresh, setRefresh] = useState(Math.random() * 76);
-    const [metaphor,setMetaphor] = useState();
-    const [lyrics,setLyrics] = useState();
-    const [author,setAuthor] = useState();
-    const [result,setResult] = useState();
+    const [metaphor,setMetaphor] = useState('');
+    const [lyrics,setLyrics] = useState('');
+    const [author,setAuthor] = useState('');
+    const [result,setResult] = useState([]);
 
-    const handleSearch = () => {
-        alert(metaphor,lyrics,author);
+    const mergeEntries = (entries) => {
+        const result = {};
+      
+        entries.forEach(entry => {
+          const key = `${entry.poem}-${entry.poet}-${entry.year}-${entry.mood}-${entry.lyrics}`;
+      
+          if (!result[key]) {
+            result[key] = { ...entry, metaphors: [] };
+          }
+      
+          result[key].metaphors.push(...entry.metaphors);
+        });
+      
+        return Object.values(result);
+      };
+
+
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_API}/api/elastic/search`,{
+                params : {
+                    metaphor: metaphor,
+                    lyrics: lyrics,
+                    author: author
+                }
+            });
+            
+            const result_ = [];
+            for(let i = 0; i < response.data.length; i ++){
+                const new_poem = response.data[i]._source;
+                result_.push({    
+                    poem: new_poem.poem,
+                    poet: new_poem.poet,
+                    lyrics: new_poem.lyrics,
+                    year: new_poem.year,
+                    mood: new_poem.mood,
+                    metaphors: [{
+                        source_domain: new_poem.source_domain,
+                        target_domain: new_poem.target_domain,
+                        metaphorical_term: new_poem['metaphorical terms'],
+                        meaning: new_poem.Meaning
+                    }]
+                });
+            }
+
+            const mergedResult = mergeEntries(result_);
+            setResult(mergedResult);
+
+        } catch (error) {
+            
+        }
+        // setLyrics('');
+        // setAuthor('');
+        // setMetaphor('');
     }
 
     useEffect(() => {
         const getRandPoem = async () =>{
             const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/api/elastic/randompoem`);
             const data = res.data;
-            console.log(data);
             setRandomPoem({Meaning: data.Meaning,
                 lyrics: data.lyrics,
                 metaphorical_terms: data["metaphorical terms"], 
@@ -56,7 +107,7 @@ export default function Home(){
                     <Paper variant='elevation' sx={{textAlign:'center', padding: '15px', fontSize: '25px'}}><span className='blue-color'>PoeticFinder</span> is <span className='green-color'>easy</span> to use. Simply enter the <span className='green-color'>keyword</span> or <span className='green-color'>phrase</span> you are looking for in the search bar, and <span className='blue-color'>PoeticFinder</span> will return a list of poems that match your query!</Paper>
                 </Grid>
                 <Grid item xs={12} mt={2}>
-                    <SearchBar setMetaphor={setMetaphor} setLyrics={setLyrics} setAuthor={setAuthor}/>
+                    <SearchBar metaphor={metaphor} lyrics={lyrics} author={author} setMetaphor={setMetaphor} setLyrics={setLyrics} setAuthor={setAuthor} handleSearch={handleSearch}/>
                 </Grid>
 
                 <Grid
@@ -70,12 +121,11 @@ export default function Home(){
                         justifyContent: 'left'
                     }}
                 >
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <ResultCard />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                        <ResultCard />
-                    </Grid>
+                    {result.map((poem,index) => (
+                        <Grid item id={index} xs={12} sm={6} md={4} lg={3} mt={2}>
+                            <ResultCard poem={poem} />
+                        </Grid>
+                    ))}
                 </Grid>
 
                 <Grid item container xs={12} mt={2} mb = {4} sx={{

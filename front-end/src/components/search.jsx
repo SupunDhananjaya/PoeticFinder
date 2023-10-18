@@ -2,7 +2,7 @@ import {Grid, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 
 
-export default function SearchBar({setMetaphor,setLyrics,setAuthor}){
+export default function SearchBar({metaphor,lyrics,author,setMetaphor,setLyrics,setAuthor,handleSearch}){
 
     const handleChange = (event) => {
         const id = event.target.id;
@@ -20,16 +20,16 @@ export default function SearchBar({setMetaphor,setLyrics,setAuthor}){
     return(
         <Grid container spacing={1} alignItems="center">
             <Grid item xs={3}>
-                <TextField id='metaphor' onChange={handleChange} label="Search by metaphors" color="primary" fullWidth />
+                <TextField id='metaphor' value={metaphor} onChange={handleChange} label="Search by metaphors" color="primary" fullWidth />
             </Grid>
             <Grid item xs={3}>
-                <TextField id='lyrics' onChange={handleChange} label="Search by lyrics" color="primary" fullWidth />
+                <TextField id='lyrics' value={lyrics} onChange={handleChange} label="Search by lyrics" color="primary" fullWidth />
             </Grid>
             <Grid item xs={3}>
-                <TextField id='author' onChange={handleChange} label="Search by author" color="primary" fullWidth />
+                <TextField id='author' value={author} onChange={handleChange} label="Search by author" color="primary" fullWidth />
             </Grid>
             <Grid item xs={3}>
-                <Button variant="contained" color="primary" fullWidth>
+                <Button  onClick={handleSearch} variant="contained" color="primary" fullWidth>
                     Search
                 </Button>
             </Grid>

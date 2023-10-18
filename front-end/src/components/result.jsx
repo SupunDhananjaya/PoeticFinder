@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import {Grid} from "@mui/material";
 import {useState} from "react";
 
-export default function ResultCard() {
+export default function ResultCard({poem}) {
 
     const [isHidden,setIsHidden] = useState(true);
 
@@ -25,48 +25,35 @@ export default function ResultCard() {
             />
             <CardContent>
                 <Typography gutterBottom variant="h4" component="div">
-                    Poem_name
+                    {poem.poem}
                 </Typography>
                 <Typography gutterBottom variant="h6" component="div">
-                    Poet_name
+                    {poem.poet}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    I wake up to the sounds of the silence that allows
-                    For my mind to run around with my ear up to the ground
-                    I'm searching to behold the stories that are told
-                    When my back is to the world that was smiling when I turned
+                    {poem.lyrics}
                 </Typography>
 
                 <Grid item hidden={isHidden} mt={2}>
-                    <Typography variant="h6" color="text.secondary">
-                        Poet:
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Poet_name
-                    </Typography>
-
-                    <Typography variant="h6" color="text.secondary" mt={2}>
+                <Typography variant="h6" color="text.secondary" mt={2}>
                         Metaphors:
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" mt={1}>
-                        Metaphor - meaning
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Subject: subject, Object: object
-                    </Typography>
-
-                    <Typography variant="body2" color="text.secondary" mt={1}>
-                        Metaphor - meaning
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Subject: subject, Object: object
-                    </Typography>
+                    {poem.metaphors.map((metaphor,index)=> (
+                        <Grid item id={index}>
+                            <Typography variant="body2" color="text.secondary" mt={1}>
+                                {metaphor.metaphorical_term} - {metaphor.meaning}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Subject: {metaphor.source_domain}, Object: {metaphor.target_domain}
+                            </Typography>
+                        </Grid>    
+                    ))}
 
                     <Typography variant="h6" color="text.secondary" mt={2}>
                         Year:
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        year
+                        {poem.year}
                     </Typography>
 
                 </Grid>
