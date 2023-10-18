@@ -12,6 +12,14 @@ export default function Home(){
 
     const [randomPoem,setRandomPoem] = useState({Meaning: undefined, lyrics: undefined,metaphorical_terms: undefined, mood:undefined, poem: undefined, poet: undefined, source_domain: undefined , target_domain: undefined, year: undefined});
     const [refresh, setRefresh] = useState(Math.random() * 76);
+    const [metaphor,setMetaphor] = useState();
+    const [lyrics,setLyrics] = useState();
+    const [author,setAuthor] = useState();
+    const [result,setResult] = useState();
+
+    const handleSearch = () => {
+        alert(metaphor,lyrics,author);
+    }
 
     useEffect(() => {
         const getRandPoem = async () =>{
@@ -48,7 +56,7 @@ export default function Home(){
                     <Paper variant='elevation' sx={{textAlign:'center', padding: '15px', fontSize: '25px'}}><span className='blue-color'>PoeticFinder</span> is <span className='green-color'>easy</span> to use. Simply enter the <span className='green-color'>keyword</span> or <span className='green-color'>phrase</span> you are looking for in the search bar, and <span className='blue-color'>PoeticFinder</span> will return a list of poems that match your query!</Paper>
                 </Grid>
                 <Grid item xs={12} mt={2}>
-                    <SearchBar />
+                    <SearchBar setMetaphor={setMetaphor} setLyrics={setLyrics} setAuthor={setAuthor}/>
                 </Grid>
 
                 <Grid
