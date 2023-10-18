@@ -1,8 +1,8 @@
+import React from "react";
 import {Grid} from "@mui/material";
-import React from "@types/react";
 import ResponsiveAppBar from "../components/appbar";
 
-export default function aboutPage(){
+export default function AboutPage(){
     return(
         <Grid container>
             <Grid item xs={12}>

@@ -1,0 +1,14 @@
+.blue-color{
+    color: dodgerblue;
+    font-size: xx-large;
+}
+
+.green-color{
+    color: limegreen;
+}
+
+.center-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
