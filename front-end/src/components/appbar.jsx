@@ -13,7 +13,7 @@ import LyricsIcon from '@mui/icons-material/Lyrics';
 import {useState} from "react";
 import { Link, useNavigate} from 'react-router-dom';
 
-const pages = ['Poems', 'Metaphors', 'About'];
+const pages = ['Poems', 'About'];
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = useState();

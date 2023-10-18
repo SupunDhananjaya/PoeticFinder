@@ -11,6 +11,7 @@ import {useState} from "react";
 export default function ResultCard({poem}) {
 
     const [isHidden,setIsHidden] = useState(true);
+    const [seed] = useState(Math.floor(Math.random() * 1085));
 
     const changeVisibility = () =>{
         setIsHidden(!isHidden);
@@ -20,7 +21,7 @@ export default function ResultCard({poem}) {
         <Card >
             <CardMedia
                 sx={{ height: 140 }}
-                image="https://picsum.photos/345/140"
+                image={`https://picsum.photos/id/${seed}/345/140`}
                 title="{keyword}"
             />
             <CardContent>

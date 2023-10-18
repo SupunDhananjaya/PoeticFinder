@@ -15,6 +15,7 @@ export default function Home(){
     const [metaphor,setMetaphor] = useState('');
     const [lyrics,setLyrics] = useState('');
     const [author,setAuthor] = useState('');
+    const [poemName,setPoemName] = useState('');
     const [result,setResult] = useState([]);
 
     const mergeEntries = (entries) => {
@@ -40,7 +41,8 @@ export default function Home(){
                 params : {
                     metaphor: metaphor,
                     lyrics: lyrics,
-                    author: author
+                    author: author,
+                    poem: poemName
                 }
             });
             
@@ -66,7 +68,7 @@ export default function Home(){
             setResult(mergedResult);
 
         } catch (error) {
-            
+            alert(error);
         }
         // setLyrics('');
         // setAuthor('');
@@ -107,7 +109,7 @@ export default function Home(){
                     <Paper variant='elevation' sx={{textAlign:'center', padding: '15px', fontSize: '25px'}}><span className='blue-color'>PoeticFinder</span> is <span className='green-color'>easy</span> to use. Simply enter the <span className='green-color'>keyword</span> or <span className='green-color'>phrase</span> you are looking for in the search bar, and <span className='blue-color'>PoeticFinder</span> will return a list of poems that match your query!</Paper>
                 </Grid>
                 <Grid item xs={12} mt={2}>
-                    <SearchBar metaphor={metaphor} lyrics={lyrics} author={author} setMetaphor={setMetaphor} setLyrics={setLyrics} setAuthor={setAuthor} handleSearch={handleSearch}/>
+                    <SearchBar metaphor={metaphor} lyrics={lyrics} poemName={poemName} author={author} setPoemName={setPoemName} setMetaphor={setMetaphor} setLyrics={setLyrics} setAuthor={setAuthor} handleSearch={handleSearch}/>
                 </Grid>
 
                 <Grid

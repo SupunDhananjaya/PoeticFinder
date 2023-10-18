@@ -30,138 +30,61 @@ const getRandomPoem = async (req,res) => {
     
 }
 
-const search = async (req,res) => {
-  try{
-    const {metaphor, lyrics, author} = req.query;
-    if(metaphor && lyrics && author){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match: {poet: author}},
-                {match: {source_domain: metaphor}},
-                {match_phrase: {lyrics: lyrics}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else if(metaphor && lyrics){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match: {source_domain: metaphor}},
-                {match_phrase: {lyrics: lyrics}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else if(metaphor && author){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match: {poet: author}},
-                {match: {source_domain: metaphor}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else if(lyrics && author){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match: {poet: author}},
-                {match_phrase: {lyrics: lyrics}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else if(metaphor){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match: {source_domain: metaphor}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else if(lyrics){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match_phrase: {lyrics: lyrics}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else if(author){
-      const data = await client.search({
-        index: 'sinhala-metaphors',
-        size: 100,
-        body: {
-          query: {
-            bool: {
-              must: [
-                {match: {poet: author}}
-              ]
-            }
-          }
-        }
-      });
-      res.status(200).send(data.hits.hits);
-      return;
-    }else{
-      res.status(400).send({message: 'search parameters are empty'});
+const search = async (req, res) => {
+  try {
+    const { metaphor, lyrics, author, poem } = req.query;
+    const mustQueries = [];
+
+    if (metaphor) mustQueries.push({ match: { source_domain: metaphor } });
+    if (lyrics) mustQueries.push({ match_phrase: { lyrics: lyrics } });
+    if (author) mustQueries.push({ match: { poet: author } });
+    if (poem) mustQueries.push({ match: { poem: poem } });
+
+    if (mustQueries.length === 0) {
+      return res.status(400).send({ message: 'search parameters are empty' });
     }
 
-    res.status(200).send({metaphor,lyrics,author});
-  }catch(error){  
-    console.log('error',error)
-    res.status(400).send({error:error, message: "Internal server error"});
+    const data = await client.search({
+      index: 'sinhala-metaphors',
+      size: 100,
+      body: {
+        query: {
+          bool: {
+            must: mustQueries
+          }
+        }
+      }
+    });
+
+    res.status(200).send(data.hits.hits);
+  } catch (error) {
+    console.log('error', error);
+    res.status(400).send({ error: error, message: "Internal server error" });
+  }
+}
+
+const getAllPoems = async (req,res) =>{
+  try{
+
+    const data = await client.search({
+      index: 'sinhala-metaphors',
+      size: 100,
+      body: {
+        query: {
+          match_all: {}
+        }
+      }
+    });
+
+    res.status(200).send(data.hits.hits);
+  }catch(error){
+    console.log('error', error);
+    res.status(400).send({ error: error, message: "Internal server error" });
   }
 }
 
 module.exports = {
     getRandomPoem,
-    search
+    search,
+    getAllPoems
 }
