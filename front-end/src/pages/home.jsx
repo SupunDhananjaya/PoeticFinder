@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Grid, Paper} from "@mui/material";
 import ResponsiveAppBar from "../components/appbar";
 import SearchBar from "../components/search";
@@ -6,8 +6,20 @@ import ResultCard from "../components/result";
 import styles from './home.style.css';
 import PoemCard from "../components/poemCard";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 export default function Home(){
+
+    // const [randomPoem,setRandomPoem] = useState();
+
+    useEffect(() => {
+        const getRandPoem = async () =>{
+           const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/api/elastic/randompoem`);
+           console.log(res)
+        }
+
+        getRandPoem();
+    },[]);
 
     return (
         <Grid container>
