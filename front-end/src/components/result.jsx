@@ -17,7 +17,7 @@ export default function ResultCard() {
     }
 
     return (
-        <Card sx={{ maxWidth: 500 }}>
+        <Card >
             <CardMedia
                 sx={{ height: 140 }}
                 image="https://picsum.photos/345/140"

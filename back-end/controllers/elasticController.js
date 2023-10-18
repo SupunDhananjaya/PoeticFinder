@@ -1,9 +1,33 @@
+const { Client } = require('@elastic/elasticsearch');
+
+const client = new Client({ node: 'http://localhost:9200' });
 
 
 const getRandomPoem = async (req,res) => {
-    res.status(200).send(
-        {"poem": "නුඹට කවි මල් මාල", "poet": "මහින්ද ප්‍රසාද් මස්ඉඹුල", "year": "2010", "lyrics": "සැමරුම් මල් වත්තෙ යමී හැගුම් එකින් එක නෙළමී සිත් බදුනේ පුරව ගමී අරගෙන මේසයට එමී", "metaphorical terms": "සැමරුම් මල් වත්තෙ", "source_domain": "උත්සවය", "target_domain": "මල් උයන", "Meaning": "සැමරීම මල් වත්තකි", "mood": "Positive"}
-    );
+
+    try {
+        const data = await client.search({
+            index: 'sinhala-metaphors',
+            size: 1,
+            from: Math.floor(Math.random() * 75),
+            body: {
+              query: {
+                function_score: {
+                  functions: [
+                    {
+                      random_score: {}
+                    }
+                  ]
+                }
+              }
+            }
+          });
+        res.status(200).send(data.hits.hits[0]._source);
+    } catch (error) {
+        res.status(400).send({error:error, message: "Internal server error"})
+    }
+    
+    
 }
 
 module.exports = {

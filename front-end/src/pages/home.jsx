@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Grid, Paper} from "@mui/material";
+import {Grid, Paper, setRef} from "@mui/material";
 import ResponsiveAppBar from "../components/appbar";
 import SearchBar from "../components/search";
 import ResultCard from "../components/result";
@@ -10,16 +10,32 @@ import axios from "axios";
 
 export default function Home(){
 
-    // const [randomPoem,setRandomPoem] = useState();
+    const [randomPoem,setRandomPoem] = useState({Meaning: undefined, lyrics: undefined,metaphorical_terms: undefined, mood:undefined, poem: undefined, poet: undefined, source_domain: undefined , target_domain: undefined, year: undefined});
+    const [refresh, setRefresh] = useState(Math.random() * 76);
 
     useEffect(() => {
         const getRandPoem = async () =>{
-           const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/api/elastic/randompoem`);
-           console.log(res)
+            const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/api/elastic/randompoem`);
+            const data = res.data;
+            console.log(data);
+            setRandomPoem({Meaning: data.Meaning,
+                lyrics: data.lyrics,
+                metaphorical_terms: data["metaphorical terms"], 
+                mood:data.mood, 
+                poem: data.poem, 
+                poet: data.poet, 
+                source_domain: data.source_domain , 
+                target_domain: data.target_domain, 
+                year: data.year})
         }
 
         getRandPoem();
-    },[]);
+    },[refresh]);
+
+    const refreshSong = () => {
+        const number = Math.floor(Math.random() * 76);
+        setRefresh(number);
+    }
 
     return (
         <Grid container>
@@ -43,26 +59,25 @@ export default function Home(){
                     columnSpacing={3}
                     sx={{
                         display: 'flex',
-                        alignItems: 'center',
                         justifyContent: 'left'
                     }}
                 >
-                    <Grid item>
+                    <Grid item xs={12} sm={6} md={4} lg={3}>
                         <ResultCard />
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12} sm={6} md={4} lg={3}>
                         <ResultCard />
                     </Grid>
                 </Grid>
 
-                <Grid item container xs={12} mt={2} sx={{
+                <Grid item container xs={12} mt={2} mb = {4} sx={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}>
                     <Grid item mt={2} >
                         <Typography mb={2} variant='h3'>Random Rhymes</Typography>
-                        <PoemCard />
+                        <PoemCard refresh={refreshSong} poem={randomPoem}/>
                     </Grid>
                 </Grid>
 
