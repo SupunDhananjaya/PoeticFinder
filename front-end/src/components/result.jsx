@@ -5,63 +5,82 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {Grid} from "@mui/material";
-import {useState} from "react";
+import { Grid } from '@mui/material';
+import { useState } from 'react';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import FaceRetouchingNaturalIcon from '@mui/icons-material/FaceRetouchingNatural';
 
-export default function ResultCard({poem}) {
+export default function ResultCard({ poem }) {
+  const [isHidden, setIsHidden] = useState(true);
+  const [seed] = useState(Math.floor(Math.random() * 1085));
 
-    const [isHidden,setIsHidden] = useState(true);
-    const [seed] = useState(Math.floor(Math.random() * 1085));
+  const changeVisibility = () => {
+    setIsHidden(!isHidden);
+  };
 
-    const changeVisibility = () =>{
-        setIsHidden(!isHidden);
-    }
+  return (
+    <Card>
+      <CardMedia
+        sx={{ height: 140 }}
+        image={`https://picsum.photos/id/${seed}/345/140`}
+        title="{keyword}"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h4" component="div">
+          {poem.poem}
+        </Typography>
+        <Typography gutterBottom variant="h6" component="div">
+          {poem.poet}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {poem.lyrics}
+        </Typography>
 
-    return (
-        <Card >
-            <CardMedia
-                sx={{ height: 140 }}
-                image={`https://picsum.photos/id/${seed}/345/140`}
-                title="{keyword}"
-            />
-            <CardContent>
-                <Typography gutterBottom variant="h4" component="div">
-                    {poem.poem}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="div">
-                    {poem.poet}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {poem.lyrics}
-                </Typography>
+        <Grid item hidden={isHidden} mt={2}>
+          <Typography variant="h6" color="text.secondary" mt={2}>
+            Metaphors:
+          </Typography>
+          {poem.metaphors.map((metaphor, index) => (
+            <Grid item key={index} id={index}>
+              <Typography variant="body2" color="text.secondary" mt={1}>
+                {metaphor.metaphorical_term} - {metaphor.meaning}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Subject: {metaphor.source_domain}, Object:{' '}
+                {metaphor.target_domain}
+              </Typography>
+            </Grid>
+          ))}
 
-                <Grid item hidden={isHidden} mt={2}>
-                <Typography variant="h6" color="text.secondary" mt={2}>
-                        Metaphors:
-                    </Typography>
-                    {poem.metaphors.map((metaphor,index)=> (
-                        <Grid item key={index} id={index}>
-                            <Typography variant="body2" color="text.secondary" mt={1}>
-                                {metaphor.metaphorical_term} - {metaphor.meaning}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                Subject: {metaphor.source_domain}, Object: {metaphor.target_domain}
-                            </Typography>
-                        </Grid>    
-                    ))}
+          <Typography variant="h6" color="text.secondary" mt={2}>
+            Year:
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {poem.year}
+          </Typography>
 
-                    <Typography variant="h6" color="text.secondary" mt={2}>
-                        Year:
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {poem.year}
-                    </Typography>
-
-                </Grid>
-            </CardContent>
-            <CardActions>
-                <Button onClick={changeVisibility} size="small">Read More</Button>
-            </CardActions>
-        </Card>
-    );
+          <Typography variant="h6" color="text.secondary" mt={2}>
+            Mood:
+          </Typography>
+          <Grid item container xs={12}>
+            <Grid item>
+              {poem.mood.toLowerCase() === 'positive' ? (
+                <InsertEmoticonIcon />
+              ) : poem.mood.toLowerCase() === 'negative' ? (
+                <SentimentVeryDissatisfiedIcon />
+              ) : (
+                <FaceRetouchingNaturalIcon />
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardActions>
+        <Button onClick={changeVisibility} size="small">
+          Read More
+        </Button>
+      </CardActions>
+    </Card>
+  );
 }
