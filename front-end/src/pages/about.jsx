@@ -10,7 +10,7 @@ export default function AboutPage(){
             <Grid item xs={12}>
                 <ResponsiveAppBar />
             </Grid>
-            <Grid item container xs={12} mt={5}> 
+            <Grid item container xs={12} mt={5} ml={2}> 
 
                 <Grid item xs={12} >
                     <Typography variant="h2">About <span className="blue-color">PoeticFinder</span></Typography>

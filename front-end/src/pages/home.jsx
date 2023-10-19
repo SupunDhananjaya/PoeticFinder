@@ -124,7 +124,7 @@ export default function Home(){
                     }}
                 >
                     {result.map((poem,index) => (
-                        <Grid item id={index} xs={12} sm={6} md={4} lg={3} mt={2}>
+                        <Grid item key={index} id={index} xs={12} sm={6} md={4} lg={3} mt={2}>
                             <ResultCard poem={poem} />
                         </Grid>
                     ))}

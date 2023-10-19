@@ -6,4 +6,6 @@ router.get("/randompoem",elasticController.getRandomPoem);
 router.get("/search",elasticController.search);
 router.get("/getAllPoems",elasticController.getAllPoems);
 
+router.post('/add',elasticController.addPoem);
+
 module.exports = router;

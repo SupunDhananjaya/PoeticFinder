@@ -40,7 +40,7 @@ export default function ResultCard({poem}) {
                         Metaphors:
                     </Typography>
                     {poem.metaphors.map((metaphor,index)=> (
-                        <Grid item id={index}>
+                        <Grid item key={index} id={index}>
                             <Typography variant="body2" color="text.secondary" mt={1}>
                                 {metaphor.metaphorical_term} - {metaphor.meaning}
                             </Typography>

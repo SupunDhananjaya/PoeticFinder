@@ -83,8 +83,30 @@ const getAllPoems = async (req,res) =>{
   }
 }
 
+const addPoem = async(req,res) => {
+  const data = req.body;
+  const undefined_val = !(data.poem && data.poet && data.year && data.lyrics && data.mood && data["metaphorical terms"] && data.source_domain && data.target_domain && data.Meaning);
+  const requ_fields = (data.poem === "" || data.poet === "" || data.year === "" || data.lyrics === ""|| data.mood === "");
+  const meta = (data["metaphorical terms"] === "" || data.source_domain === "" || data.target_domain === "" || data.Meaning === "") && (data["metaphorical terms"] !== "" || data.source_domain !== "" || data.target_domain !== "" || data.Meaning !== "");
+  if(requ_fields || meta || undefined_val){
+    res.status(400).send({success: false, message: "requeired fields are incomplete"});
+  }
+
+  try{
+    const response = await client.index({
+      index: 'sinhala-metaphors', 
+      body: data 
+    });
+
+    res.status(200).send({success: true});
+  }catch(error){
+    res.status(400).send(error);
+  }
+}
+
 module.exports = {
     getRandomPoem,
     search,
-    getAllPoems
+    getAllPoems,
+    addPoem
 }
