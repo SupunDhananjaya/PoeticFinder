@@ -1,6 +1,7 @@
-const { Client } = require('@elastic/elasticsearch');
+const elasticSearch = require('elasticsearch');
+require('dotenv').config();
 
-const client = new Client({ node: 'http://localhost:9200' });
+const client = new elasticSearch.Client({ host: process.env.ELASTIC_URL });
 
 
 const getRandomPoem = async (req,res) => {
@@ -22,8 +23,10 @@ const getRandomPoem = async (req,res) => {
               }
             }
           });
+        console.log(res);
         res.status(200).send(data.hits.hits[0]._source);
     } catch (error) {
+        console.log(error);
         res.status(400).send({error:error, message: "Internal server error"});
     }
     
